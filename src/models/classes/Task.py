@@ -7,3 +7,6 @@ class Task:
         self.deadline = deadline
         self.is_done = is_done
         self.done_date = done_date
+
+    def tuple_form(self):
+        return self.name , self.issuer, self.priority, self.deadline, self.is_done, self.done_date
