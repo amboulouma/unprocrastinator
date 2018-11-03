@@ -1,12 +1,12 @@
+from datetime import datetime
+
 class Task:
     '''The Task class with its attributes'''
-    def __init__(self, name, issuer=None, priority=None, deadline=None, is_done=False, done_date=None):
+    def __init__(self, name, issuer='', priority=0, is_done=False):
         self.name = name
         self.issuer = issuer
         self.priority = priority
-        self.deadline = deadline
         self.is_done = is_done
-        self.done_date = done_date
 
     def tuple_form(self):
-        return self.name , self.issuer, self.priority, self.deadline, self.is_done, self.done_date
+        return self.name , self.issuer, self.priority, self.is_done, 

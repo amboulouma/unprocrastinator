@@ -1,49 +1,30 @@
 import sqlite3
+import os.path
 
-from .models.services.TaskService import TaskService
+from .models.services.TaskService import *
 from .models.classes.Task import Task
 
-connection = sqlite3.connect('../../unprocrastinator.db')
-task_service = TaskService(connection)
-
 def create_task():
-    while True:
+    print('Create a new task')
+    name = input('Name: ')
+    issuer = input('Issuer: ')
+    priority = input('Priority: ')
+    task = Task(name=name, issuer=issuer, priority=priority)
+    choice = input('Is the entry {} valid? [Y/n]'.format(task.tuple_form()))
+    if choice is not 'n':
+        try:
+            create_task_service(task.tuple_form())
+            print('Task {} has successfully been saved.'.format(task.tuple_form()))
+        except:
+            print('An error has occured while saving the task.')
         print()
-        print('Create a new task')
-        print('1- Creation with name and issuer')
-        print('2- Full creation')
-        print('3- Quit menu')
-        choice = int(input('Your choice: '))
-        if choice == 1:
-            name = input('Name: ')
-            issuer = input('Issuer: ')
-            task = Task(name=name, issuer=issuer)
-            choice = input(task.tuple_form() + '[Y/n]')
-            if choice is not 'n':
-                try:
-                    task_service.create_task(task)
-                    print('Task' + task.tuple_form() + 'has successfully been saved.')
-                except:
-                    print('An error has occured when saving the task.')
-        elif choice == 2:
-            name = input('Name: ')
-            issuer = input('Issuer: ')
-            priority = input('Priority: ')
-            deadline = input('Deadline: ')
-            task = Task(name=name, issuer=issuer, priority=priority, deadline=deadline)
-            choice = input(task.tuple_form() + '[Y/n]')
-            if choice is not 'n':
-                try:
-                    task_service.create_task(task)
-                    print('Task' + task.tuple_form() + 'has successfully been saved.')
-                except:
-                    print('An error has occured when saving the task.')
-        elif choice == 3:
-            break
-        else:
-            print('Please provide a valid entry.')
+
 
 def show_tasks():
-    print()
     print('Pending Tasks')
-    task_service.show_tasks()
+    try:
+        show_tasks_service()
+    except :
+        print('An error has occured while saving the task.')
+    print()
+        

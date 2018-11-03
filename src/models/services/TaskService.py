@@ -1,73 +1,70 @@
 import datetime
 import pprint
+import os
+import sqlite3
 
 from ..classes.Task import Task
 
 
-class TaskService:
-    '''The task service class'''
-    def __init__(self, connection):
-        self.connection = connection
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+db_path = os.path.join(BASE_DIR, "../../../unprocrastinator.db")
 
-    def create_task(self, task):
-        """
-        Create a new task
-        :param self:
-        :param task:
-        :return:
-        """
-        with self.connection:
-            sql = ''' INSERT INTO tasks(name, issuer, priority, deadline, is_done, done_date)
-                    VALUES(?,?,?,?,?,?) '''
-            cursor = self.connection.cursor()
-            cursor.execute(sql, task)
-            return cursor.lastrowid
+connection = sqlite3.connect(db_path)
 
-
-    def update_task(self, task_id, priority, deadline):
-        """
-        update priority and deadline of a task
-        :param self:
-        :param task:
-        :return: task id
-        """
-
-        with self.connection:
-            sql = ''' UPDATE tasks
-                    SET priority = ? ,
-                    deadline = ? 
-                    WHERE id = ?'''
-            cursor = self.connection.cursor()
-            cursor.execute(sql, task_id, priority, deadline)
-            return cursor.lastrowid
+def create_task_service(task):
+    """
+    Create a new task
+    :param task:
+    :return:
+    """
+    with connection:
+        sql = ''' INSERT INTO tasks(name, issuer, priority, is_done)
+                VALUES(?,?,?,?) '''
+        cursor = connection.cursor()
+        cursor.execute(sql, task)
+        return cursor.lastrowid
 
 
-    def task_done(self, task_id):
-        """
-        update is_done and done_date  of a task
-        :param self:
-        :param task:
-        :return: project id
-        """
+def update_task_service(task_id, priority):
+    """
+    update priority of a task
+    :param priority:
+    :return: task id
+    """
 
-        with self.connection:
-            sql = ''' UPDATE tasks
-                    SET is_done = ? ,
-                    done_date = ?
-                    WHERE id = ?'''
-            cursor = self.connection.cursor()
-            cursor.execute(sql, True, str(datetime.datetime.now().date().strftime('%d/%m/%Y')), task_id)
-            return cursor.lastrowid
+    with connection:
+        sql = ''' UPDATE tasks
+                SET priority = ? ,
+                WHERE id = ?'''
+        cursor = connection.cursor()
+        cursor.execute(sql, task_id, priority)
+        return cursor.lastrowid
 
 
-    def show_tasks(self):
-        """
-        showing the list of tasks
-        :param self:
-        """
+def task_done_service(task_id):
+    """
+    update is_done and done_date  of a task
+    :param task:
+    :return: project id
+    """
 
-        with self.connection:
-            sql = ''' select * from tasks'''
-            cursor = self.connection.cursor()
-            cursor.execute(sql)
-            print(cursor.fetchall())
+    with connection:
+        sql = ''' UPDATE tasks
+                SET is_done = ? ,
+                done_date = ?
+                WHERE id = ?'''
+        cursor = connection.cursor()
+        cursor.execute(sql, True, task_id)
+        return cursor.lastrowid
+
+
+def show_tasks_service():
+    """
+    showing the list of tasks
+    :param 
+    """
+    with connection:
+        sql = ''' select * from tasks'''
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        print(cursor.fetchall())
