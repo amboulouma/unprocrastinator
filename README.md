@@ -1,3 +1,3 @@
 # Unprocrastinator
 
-a tools library to never procrastinate again.
+a thousand tools to never procrastinate.
