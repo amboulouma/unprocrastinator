@@ -1,7 +1,6 @@
 class Task:
     '''The Task class with its attributes'''
-    def __init__(self, id, name, issuer, priority, deadline, is_done=False, done_date):
-        self.id = id
+    def __init__(self, name, issuer=None, priority=None, deadline=None, is_done=False, done_date=None):
         self.name = name
         self.issuer = issuer
         self.priority = priority
